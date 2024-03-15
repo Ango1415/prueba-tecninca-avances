@@ -11,16 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->unsignedBigInteger('num_ident')->unique()->comment('Número de cédula del usuario');
+            $table->string('nombre', 50);
+            $table->string('apellido', 50);
+            $table->string('correo', 50);
+            $table->unsignedInteger('telefono');
+            $table->string('contrasena', 50);
+            $table->unsignedInteger('ubicacion');
+            $table->unsignedInteger('tipo');
             $table->timestamps();
+            //$table->timestamp('email_verified_at')->nullable();
+            //$table->rememberToken();
+
+            $table->foreign('ubicacion')->references('id_ubicacion')->on('ubicaciones')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('tipo')->references('id_tipo')->on('tipos')->onDelete('set null')->onUpdate('cascade');
         });
 
+        /*
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
@@ -35,6 +44,7 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+        */
     }
 
     /**
@@ -43,7 +53,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('sessions');
+        //Schema::dropIfExists('password_reset_tokens');
+        //Schema::dropIfExists('sessions');
     }
 };
